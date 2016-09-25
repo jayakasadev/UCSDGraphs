@@ -23,45 +23,38 @@ import util.GraphLoader;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 2
+    private MapAdjList adjList;
 	
 	
 	/** 
 	 * Create a new empty MapGraph 
 	 */
-	public MapGraph()
-	{
-		// TODO: Implement in this constructor in WEEK 2
+	public MapGraph(){
+        adjList = new MapAdjList();
 	}
 	
 	/**
 	 * Get the number of vertices (road intersections) in the graph
 	 * @return The number of vertices in the graph.
 	 */
-	public int getNumVertices()
-	{
-		//TODO: Implement this method in WEEK 2
-		return 0;
+	public int getNumVertices(){
+		return adjList.numVertices();
 	}
 	
 	/**
 	 * Return the intersections, which are the vertices in this graph.
 	 * @return The vertices in this graph as GeographicPoints
 	 */
-	public Set<GeographicPoint> getVertices()
-	{
-		//TODO: Implement this method in WEEK 2
-		return null;
+	public Set<GeographicPoint> getVertices(){
+		return adjList.getVertices();
 	}
 	
 	/**
 	 * Get the number of road segments in the graph
 	 * @return The number of edges in the graph.
 	 */
-	public int getNumEdges()
-	{
-		//TODO: Implement this method in WEEK 2
-		return 0;
+	public int getNumEdges(){
+		return adjList.numEdges();
 	}
 
 
@@ -73,10 +66,8 @@ public class MapGraph {
 	 * @return true if a node was added, false if it was not (the node
 	 * was already in the graph, or the parameter is null).
 	 */
-	public boolean addVertex(GeographicPoint location)
-	{
-		// TODO: Implement this method in WEEK 2
-		return false;
+	public boolean addVertex(GeographicPoint location){
+		return adjList.implementAddVertex(location);
 	}
 	
 	/**
@@ -92,9 +83,8 @@ public class MapGraph {
 	 *   or if the length is less than 0.
 	 */
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName, String roadType, double length) throws IllegalArgumentException {
-
-		//TODO: Implement this method in WEEK 2
-		
+		MapNode node = new MapNode(to, roadName, roadType, length);
+		adjList.implementAddEdge(from, node);
 	}
 	
 
@@ -123,7 +113,7 @@ public class MapGraph {
 	{
 		// TODO: Implement this method in WEEK 2
 		
-		// Hook for visualization.  See writeup.
+		//Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
 
 		return null;
@@ -152,8 +142,7 @@ public class MapGraph {
 	 * @return The list of intersections that form the shortest path from 
 	 *   start to goal (including both start and goal).
 	 */
-	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
+	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched){
 		// TODO: Implement this method in WEEK 3
 
 		// Hook for visualization.  See writeup.
@@ -183,8 +172,7 @@ public class MapGraph {
 	 * @return The list of intersections that form the shortest path from 
 	 *   start to goal (including both start and goal).
 	 */
-	public List<GeographicPoint> aStarSearch(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
+	public List<GeographicPoint> aStarSearch(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched){
 		// TODO: Implement this method in WEEK 3
 		
 		// Hook for visualization.  See writeup.
@@ -195,8 +183,7 @@ public class MapGraph {
 
 	
 	
-	public static void main(String[] args)
-	{
+	public static void main(String[] args){
 		System.out.print("Making a new map...");
 		MapGraph firstMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");

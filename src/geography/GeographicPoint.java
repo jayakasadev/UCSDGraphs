@@ -16,15 +16,13 @@ public class GeographicPoint extends Double {
 	 * @param other
 	 * @return The distance between this lat, lon point and the other point
 	 */
-	public double distance(GeographicPoint other)
-	{
+	public double distance(GeographicPoint other){
 		return getDist(this.getX(), this.getY(),
                 other.getX(), other.getY());     
 	}
 	
     
-    private double getDist(double lat1, double lon1, double lat2, double lon2)
-    {
+    private double getDist(double lat1, double lon1, double lat2, double lon2){
     	int R = 6373; // radius of the earth in kilometres
     	double lat1rad = Math.toRadians(lat1);
     	double lat2rad = Math.toRadians(lat2);
