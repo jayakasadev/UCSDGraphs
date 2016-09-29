@@ -18,8 +18,11 @@ class MapAdjList{
     }
 
     public boolean implementAddVertex(GeographicPoint edge) {
+        //System.out.println("implementAddVertex " + edge);
         if (!listMap.containsKey(edge) && edge != null){
+            //System.out.println("Adding Vertex " + edge);
             listMap.put(edge, new ArrayList<MapNode>());
+            //System.out.println("Adding Vertex " + listMap.containsKey(edge));
             return true;
         }
         return false;
@@ -40,14 +43,22 @@ class MapAdjList{
     public void implementAddEdge(GeographicPoint vertex, MapNode edge) {
         List<MapNode> list = listMap.get(vertex);
         list.add(edge);
+        numEdges++;
     }
 
     public int numEdges(){
         return numEdges;
     }
 
-    public List<MapNode> getNeighbors(GeographicPoint vertex) {
-        return listMap.get(vertex);
+    public List<GeographicPoint> getNeighbors(GeographicPoint vertex) {
+        List<MapNode> nodes = listMap.get(vertex);
+        List<GeographicPoint> neighbors = new ArrayList<>();
+
+        for(MapNode node : nodes){
+            neighbors.add(node.getDestination());
+        }
+
+        return neighbors;
     }
 
     public List<GeographicPoint> getInNeighbors(GeographicPoint v) {

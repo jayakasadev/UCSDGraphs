@@ -131,7 +131,7 @@ public class GraphLoader
 	 *   assumed to be directed.
 	 */
 	public static void loadRoadMap(String filename, roadgraph.MapGraph map, HashMap<GeographicPoint,HashSet<RoadSegment>> segments, Set<GeographicPoint> intersectionsToLoad){
-		Collection<GeographicPoint> nodes = new HashSet<GeographicPoint>();
+		Collection<GeographicPoint> nodes = new HashSet<>();
         HashMap<GeographicPoint,List<LinkedList<RoadLineInfo>>> pointMap = buildPointMapOneWay(filename);
 		
         // Add the nodes to the graph

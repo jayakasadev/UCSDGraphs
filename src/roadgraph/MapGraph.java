@@ -8,8 +8,7 @@
 package roadgraph;
 
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
@@ -57,8 +56,6 @@ public class MapGraph {
 		return adjList.numEdges();
 	}
 
-
-
 	/** Add a node corresponding to an intersection at a Geographic Point
 	 * If the location is already in the graph or null, this method does 
 	 * not change the graph.
@@ -67,7 +64,10 @@ public class MapGraph {
 	 * was already in the graph, or the parameter is null).
 	 */
 	public boolean addVertex(GeographicPoint location){
-		return adjList.implementAddVertex(location);
+        //System.out.println("addVertex " + location);
+		boolean ret = adjList.implementAddVertex(location);
+        //System.out.println("addVertex " + getNumEdges());
+        return ret;
 	}
 	
 	/**
@@ -83,8 +83,13 @@ public class MapGraph {
 	 *   or if the length is less than 0.
 	 */
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName, String roadType, double length) throws IllegalArgumentException {
-		MapNode node = new MapNode(to, roadName, roadType, length);
-		adjList.implementAddEdge(from, node);
+		//map doesnt contain the point
+		if(!adjList.containsEdge(from) && !adjList.containsEdge(to)){
+            return;
+        }
+
+        MapNode node = new MapNode(to, roadName, roadType, length);
+        adjList.implementAddEdge(from, node);
 	}
 	
 
@@ -109,16 +114,60 @@ public class MapGraph {
 	 * @return The list of intersections that form the shortest (unweighted)
 	 *   path from start to goal (including both start and goal).
 	 */
-	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
-		// TODO: Implement this method in WEEK 2
-		
-		//Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
+	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched){
 
-		return null;
+        //System.out.println("Start " + start);
+        //System.out.println("Goal " + goal + "\n");
+
+        List<GeographicPoint> path = new ArrayList<>();
+
+        Queue<GeographicPoint> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        Map<GeographicPoint, GeographicPoint> parents = new HashMap<>();
+
+        queue.add(start);
+        visited.add(start.toString());
+        GeographicPoint point = null;
+
+        while(!queue.isEmpty()){
+            point = queue.poll();
+
+            if(point.distance(goal) == 0) break;
+
+            List<GeographicPoint> neighbors = adjList.getNeighbors(point);
+            //neighbors.addAll(adjList.getInNeighbors(point));
+
+            for(GeographicPoint neighbor : neighbors){
+                if(visited.contains(neighbor.toString())){
+                    continue;
+                }
+
+                //Hook for visualization.  See writeup.
+                //TODO nodeSearched.accept(next.getLocation());
+                nodeSearched.accept(neighbor);
+
+                visited.add(neighbor.toString());
+
+                parents.put(neighbor, point);
+                queue.add(neighbor);
+            }
+        }
+
+        //goal was not found
+        if(point.distance(goal) != 0){
+            return null;
+        }
+
+        point = goal;
+
+        while(point != null){
+            GeographicPoint parent = parents.get(point);
+            path.add(0, point);
+            point = parent;
+        }
+
+		return path;
 	}
-	
 
 	/** Find the path from start to goal using Dijkstra's algorithm
 	 * 

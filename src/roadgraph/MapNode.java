@@ -13,7 +13,7 @@ class MapNode{
     private double length;
 
     MapNode(GeographicPoint destination, String roadName, String roadType, double length) throws IllegalArgumentException{
-        if(destination != null && roadName.length() > 0 && roadType.length() > 0 && length > 0){
+        if(destination != null && roadName != null && roadType != null && length > 0){
             this.destination = destination;
             this.roadName = roadName;
             this.roadType = roadType;
