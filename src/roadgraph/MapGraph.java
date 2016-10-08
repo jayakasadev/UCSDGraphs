@@ -12,6 +12,8 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
+import roadgraph.mapnode.MapNode;
+import roadgraph.mapnode.SimpleNode;
 import util.GraphLoader;
 
 /**
@@ -87,8 +89,11 @@ public class MapGraph {
 		if(!adjList.containsEdge(from) && !adjList.containsEdge(to)){
             return;
         }
+        if(roadName == null || roadType == null || length == 0){
+			throw new IllegalArgumentException("Illegal Arguments: One or more of the arguments may be null, or length may be equal to zero.");
+		}
 
-        MapNode node = new MapNode(to, roadName, roadType, length);
+        MapNode node = new SimpleNode(to);
         adjList.implementAddEdge(from, node);
 	}
 	

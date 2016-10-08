@@ -1,6 +1,7 @@
 package roadgraph;
 
 import geography.GeographicPoint;
+import roadgraph.mapnode.MapNode;
 
 import java.util.*;
 
