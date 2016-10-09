@@ -1,0 +1,14 @@
+Score: 1.0
+Feedback: All tests passed. Great job!
+
+MAP: Straight line (-3 <- -2 <- -1 <- 0 -> 1 -> 2-> 3 ->...)
+** Test #1: Running Dijkstra's algorithm from (0.0, 0.0) to (6.0, 6.0)...PASSED.
+
+MAP: Example map from the writeup
+** Test #2: Running Dijkstra's algorithm from (7.0, 3.0) to (4.0, -1.0)...PASSED.
+
+MAP: Right triangle (with a little detour)
+** Test #3: Running Dijkstra's algorithm from (0.0, 0.0) to (0.0, 4.0)...PASSED.
+
+UCSD MAP: Intersections around UCSD
+** Test #4: Running Dijkstra's algorithm from (32.8709815, -117.2434254) to (32.8742087, -117.2381344)...PASSED.
