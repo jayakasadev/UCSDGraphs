@@ -1,7 +1,6 @@
 package roadgraph;
 
 import geography.GeographicPoint;
-import roadgraph.mapnode.MapNode;
 
 import java.util.*;
 
@@ -10,40 +9,53 @@ import java.util.*;
  */
 class MapAdjList{
 
-    private Map<GeographicPoint, List<MapNode>> listMap;
+    //private Map<GeographicPoint, List<MapEdge>> listMap;
+    private Map<GeographicPoint, MapNode> nodes;
     private int numEdges;
 
     MapAdjList(){
-        listMap = new HashMap<>();
+        nodes = new HashMap<>();
         numEdges = 0;
     }
 
-    public boolean implementAddVertex(GeographicPoint edge) {
+    public MapNode getMapNode(GeographicPoint point){
+        return nodes.get(point);
+    }
+
+    public double getDistance(GeographicPoint node){
+        return nodes.get(node).getDistance();
+    }
+
+    public boolean containsNode(GeographicPoint point){
+        return nodes.containsKey(point);
+    }
+
+    public boolean implementAddVertex(GeographicPoint node) {
         //System.out.println("implementAddVertex " + edge);
-        if (!listMap.containsKey(edge) && edge != null){
+        if (!nodes.containsKey(node) && node != null){
             //System.out.println("Adding Vertex " + edge);
-            listMap.put(edge, new ArrayList<MapNode>());
-            //System.out.println("Adding Vertex " + listMap.containsKey(edge));
+            nodes.put(node, new MapNode(node));
+
+            //System.out.println("Adding " + nodes.get(node));
             return true;
         }
         return false;
     }
 
     public Set<GeographicPoint> getVertices(){
-        return listMap.keySet();
-    }
-
-    public boolean containsEdge(GeographicPoint edge){
-        return listMap.containsKey(edge);
+        return nodes.keySet();
     }
 
     public int numVertices(){
-        return listMap.keySet().size();
+        return nodes.keySet().size();
     }
 
-    public void implementAddEdge(GeographicPoint vertex, MapNode edge) {
-        List<MapNode> list = listMap.get(vertex);
-        list.add(edge);
+    public void implementAddEdge(GeographicPoint from, GeographicPoint to, String roadName, String roadType, double length) {
+
+        MapNode node = nodes.get(from);
+        //System.out.println("from " + from + " to " + to + " length " + length);
+        node.addEdge(to, roadName, roadType, length);
+
         numEdges++;
     }
 
@@ -51,46 +63,41 @@ class MapAdjList{
         return numEdges;
     }
 
-    public List<GeographicPoint> getNeighbors(GeographicPoint vertex) {
-        List<MapNode> nodes = listMap.get(vertex);
-        List<GeographicPoint> neighbors = new ArrayList<>();
-
-        for(MapNode node : nodes){
-            neighbors.add(node.getDestination());
-        }
-
-        return neighbors;
+    public List<MapEdge> getNeighbors(GeographicPoint vertex) {
+        return nodes.get(vertex).getEdges();
     }
 
-    public List<GeographicPoint> getInNeighbors(GeographicPoint v) {
-        List<GeographicPoint> inNeighbors = new ArrayList<>();
-        for (GeographicPoint u : listMap.keySet()) {
+    public List<MapNode> getInNeighbors(GeographicPoint v) {
+        List<MapNode> inNeighbors = new ArrayList<>();
+        for (GeographicPoint u : nodes.keySet()) {
             //iterate through all edges in u's adjacency list and
             //add u to the inNeighbor list of v whenever an edge
             //with startpoint u has endpoint v.
-            for (MapNode w : listMap.get(u)) {
+            for (MapEdge w : nodes.get(u).getEdges()) {
                 if (v.distance(w.getDestination()) == 0) {
-                    inNeighbors.add(u);
+                    inNeighbors.add(nodes.get(u));
                 }
             }
         }
         return inNeighbors;
     }
 
-    public List<Integer> getDistance2(int v) {
-        return null;
+    public void resetNodes(){
+        nodes.keySet().stream().forEach(s -> nodes.get(s).resetNodes());
     }
 
     public String adjacencyString() {
         String s = "Adjacency list";
         s += " (size " + numVertices() + "+" + numEdges() + " Nodes):";
 
-        for (GeographicPoint v : listMap.keySet()) {
+        for (GeographicPoint v : nodes.keySet()) {
             s += "\n\t"+v+": ";
-            for (MapNode w : listMap.get(v)) {
-                s += w+", ";
+            for (MapEdge w : nodes.get(v).getEdges()) {
+                s += w.getDestination() + ", ";
             }
         }
         return s;
     }
+
+
 }

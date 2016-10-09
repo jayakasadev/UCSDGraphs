@@ -3,7 +3,7 @@ package geography;
 import java.awt.geom.Point2D.Double;
 
 @SuppressWarnings("serial")
-public class GeographicPoint extends Double {
+public class GeographicPoint extends Double{
 	
 	public GeographicPoint(double latitude, double longitude)
 	{
@@ -42,6 +42,4 @@ public class GeographicPoint extends Double {
     {
     	return "Lat: " + getX() + ", Lon: " + getY();
     }
-	
-	
 }
