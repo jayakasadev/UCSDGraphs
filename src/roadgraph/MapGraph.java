@@ -237,12 +237,14 @@ public class MapGraph {
             //neighbors.addAll(adjList.getInNeighbors(point));
 
             for(MapEdge neighbor : neighbors){
-
                 GeographicPoint neighPoint = neighbor.getDestination();
                 MapNode neighNode = adjList.getMapNode(neighPoint);
                 if(visited.contains(neighNode)){
                     continue;
                 }
+                // Hook for visualization.  See writeup.
+                nodeSearched.accept(neighPoint);
+
                 double distance = curr.getDistance();
                 double length = neighbor.getLength();
 
