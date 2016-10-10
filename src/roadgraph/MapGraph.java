@@ -189,7 +189,7 @@ public class MapGraph {
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint goal, Consumer<GeographicPoint> nodeSearched){
         if(!adjList.containsNode(start) || !adjList.containsNode(goal)){
-            return new ArrayList<>();
+            return null;
         }
 
         //resetting distances
@@ -258,27 +258,17 @@ public class MapGraph {
             }
 
         }
+
+        //no path exists
+        if(curr.getCoordinate().distance(goal) != 0){
+            return null;
+        }
         //System.out.println("Getting Path");
         //List<GeographicPoint> path = getPath(parents, goal);
         //System.out.println("Got Path");
 
         return getPath(parents, goal);
 	}
-
-	private List<GeographicPoint> getPath(Map<GeographicPoint, GeographicPoint> parents, GeographicPoint curr){
-        //System.out.println("GETTING PATH");
-        List<GeographicPoint> path = new ArrayList<>();
-        while(curr != null){
-            GeographicPoint parent = parents.get(curr);
-            path.add(0, curr);
-            curr = parent;
-        }
-
-        //path.stream().forEach(s -> System.out.println(adjList.getMapNode(s).getDistance()));
-        //System.out.println();
-
-        return path;
-    }
 
 	/** Find the path from start to goal using A-Star search
 	 * 
@@ -310,7 +300,20 @@ public class MapGraph {
 		return null;
 	}
 
-	
+    private List<GeographicPoint> getPath(Map<GeographicPoint, GeographicPoint> parents, GeographicPoint curr){
+        //System.out.println("GETTING PATH");
+        List<GeographicPoint> path = new ArrayList<>();
+        while(curr != null){
+            GeographicPoint parent = parents.get(curr);
+            path.add(0, curr);
+            curr = parent;
+        }
+
+        //path.stream().forEach(s -> System.out.println(adjList.getMapNode(s).getDistance()));
+        //System.out.println();
+
+        return path;
+    }
 	
 	public static void main(String[] args){
 		System.out.print("Making a new map...");
@@ -340,7 +343,7 @@ public class MapGraph {
 		//List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
         //System.out.println("AStar: " + testroute2.size());
 
-        /*
+
 		
 		MapGraph testMap = new MapGraph();
 		GraphLoader.loadRoadMap("data/maps/utc.map", testMap);
@@ -363,7 +366,7 @@ public class MapGraph {
         System.out.println("Dijkstra: " + testroute.size());
 		//testroute2 = testMap.aStarSearch(testStart,testEnd);
         //System.out.println("AStar: " + testroute2.size());
-        */
+
 		
 		
 		/* Use this code in Week 3 End of Week Quiz */
