@@ -1,14 +1,15 @@
-Score: 1.0
-Feedback: All tests passed. Great job!
-
-MAP: Straight line (-3 <- -2 <- -1 <- 0 -> 1 -> 2-> 3 ->...)
-** Test #1: Running Dijkstra's algorithm from (0.0, 0.0) to (6.0, 6.0)...PASSED.
-
-MAP: Example map from the writeup
-** Test #2: Running Dijkstra's algorithm from (7.0, 3.0) to (4.0, -1.0)...PASSED.
-
-MAP: Right triangle (with a little detour)
-** Test #3: Running Dijkstra's algorithm from (0.0, 0.0) to (0.0, 4.0)...PASSED.
-
-UCSD MAP: Intersections around UCSD
-** Test #4: Running Dijkstra's algorithm from (32.8709815, -117.2434254) to (32.8742087, -117.2381344)...PASSED.
+Making a new map...Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5 		Lat: 1.0, Lon: 1.0 to Lat: 8.0, Lon: -1.0
+Visited 9
+Dijkstra: 5
+Visited 5
+AStar: 5
+Test 2 using utc: Dijkstra should be 13 and AStar should be 5
+Visited 13
+Dijkstra: 5
+Visited 6
+AStar: 5
+Test 3 using utc: Dijkstra should be 37 and AStar should be 10
+Visited 37
+Dijkstra: 6
+Visited 7
+AStar: 6

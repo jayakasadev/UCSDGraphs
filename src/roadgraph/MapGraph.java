@@ -259,6 +259,8 @@ public class MapGraph {
 
         }
 
+        System.out.println("Visited " + visited.size());
+
         //no path exists
         if(curr.getCoordinate().distance(goal) != 0){
             return null;
@@ -313,7 +315,7 @@ public class MapGraph {
                 if(o2 == null){
                     return -1;
                 }
-                double compare = o1.getDistance() - o2.getDistance();
+                double compare = o1.getPrediction() - o2.getPrediction();
                 if(0 < compare){
                     return 1;
                 }
@@ -357,11 +359,15 @@ public class MapGraph {
                 // Hook for visualization.  See writeup.
                 nodeSearched.accept(neighPoint);
 
-                double hueristic = hueristic(startNode, curr, finish);
+                double distance = curr.getDistance();
+                double length = neighbor.getLength();
 
-                if(neighNode.getDistance() == 0 || hueristic < neighNode.getDistance()){
-                    neighNode.setDistance(hueristic);
-                    //System.out.println("\tNeighbor " + neighNode + " distance " + neighNode.getDistance());
+                double hueristic = hueristic(neighNode, finish, length, distance);
+
+                if(neighNode.getDistance() == 0 || (distance+length) < neighNode.getDistance()){
+                    neighNode.setDistance(distance+length);
+                    neighNode.setPrediction(hueristic);
+                    //System.out.println("\tNeighbor " + neighNode + " distance " + neighNode.getDistance() + " predicted " + neighNode.getPrediction());
                     parents.put(neighPoint, point);
                     queue.add(neighNode);
                 }
@@ -369,6 +375,8 @@ public class MapGraph {
             }
 
         }
+
+        System.out.println("Visited " + visited.size());
 
         //no path exists
         if(curr.getCoordinate().distance(goal) != 0){
@@ -378,8 +386,9 @@ public class MapGraph {
         return getPath(parents, goal);
 	}
 
-	private double hueristic(MapNode start , MapNode curr, MapNode goal){
-        return start.getCoordinate().distance(curr.getCoordinate()) + curr.getCoordinate().distance(goal.getCoordinate());
+	private double hueristic(MapNode curr, MapNode goal, double length, double distance){
+        return (length + distance) * curr.distanceTo(goal);
+        //return (start.distanceTo(curr) + curr.distanceTo(goal));
     }
 
     private List<GeographicPoint> getPath(Map<GeographicPoint, GeographicPoint> parents, GeographicPoint curr){
@@ -419,14 +428,15 @@ public class MapGraph {
 		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
 		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
 		
-		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5");
+		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5 \t\t" + testStart + " to " + testEnd);
 		List<GeographicPoint> testroute = simpleTestMap.dijkstra(testStart,testEnd);
         System.out.println("Dijkstra: " + testroute.size());
+        //testroute.stream().forEach(s -> System.out.println(s));
 		List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
         System.out.println("AStar: " + testroute2.size());
+        //testroute2.stream().forEach(s -> System.out.println(s));
 
 
-		
 		MapGraph testMap = new MapGraph();
 		GraphLoader.loadRoadMap("data/maps/utc.map", testMap);
 		
@@ -448,8 +458,6 @@ public class MapGraph {
         System.out.println("Dijkstra: " + testroute.size());
 		testroute2 = testMap.aStarSearch(testStart,testEnd);
         System.out.println("AStar: " + testroute2.size());
-
-		
 		
 		/* Use this code in Week 3 End of Week Quiz */
 		/*MapGraph theMap = new MapGraph();
