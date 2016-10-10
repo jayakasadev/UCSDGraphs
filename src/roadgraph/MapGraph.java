@@ -296,9 +296,91 @@ public class MapGraph {
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
-		
-		return null;
+
+        if(!adjList.containsNode(start) || !adjList.containsNode(goal)){
+            return null;
+        }
+
+        //resetting distances
+        adjList.resetNodes();
+
+        PriorityQueue<MapNode> queue = new PriorityQueue<>(new Comparator<MapNode>() {
+            @Override
+            public int compare(MapNode o1, MapNode o2) {
+                if(o1 == null){
+                    return 1;
+                }
+                if(o2 == null){
+                    return -1;
+                }
+                double compare = o1.getDistance() - o2.getDistance();
+                if(0 < compare){
+                    return 1;
+                }
+                if(0 > compare){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        Set<MapNode> visited = new HashSet<>();
+        Map<GeographicPoint, GeographicPoint> parents = new HashMap<>();
+
+        MapNode startNode = adjList.getMapNode(start);
+        MapNode finish = adjList.getMapNode(goal);
+
+        MapNode curr = adjList.getMapNode(start);
+        queue.add(curr);
+
+        while(!queue.isEmpty()){
+            curr = queue.poll();
+            //System.out.println("Curr " + curr + " distance " + curr.getDistance());
+            if(visited.contains(curr)){
+                continue;
+            }
+            visited.add(curr);
+
+            GeographicPoint point = curr.getCoordinate();
+            if(point.distance(goal) == 0){
+                break;
+            }
+
+            List<MapEdge> neighbors = adjList.getNeighbors(point);
+            //neighbors.addAll(adjList.getInNeighbors(point));
+
+            for(MapEdge neighbor : neighbors){
+                GeographicPoint neighPoint = neighbor.getDestination();
+                MapNode neighNode = adjList.getMapNode(neighPoint);
+                if(visited.contains(neighNode)){
+                    continue;
+                }
+                // Hook for visualization.  See writeup.
+                nodeSearched.accept(neighPoint);
+
+                double hueristic = hueristic(startNode, curr, finish);
+
+                if(neighNode.getDistance() == 0 || hueristic < neighNode.getDistance()){
+                    neighNode.setDistance(hueristic);
+                    //System.out.println("\tNeighbor " + neighNode + " distance " + neighNode.getDistance());
+                    parents.put(neighPoint, point);
+                    queue.add(neighNode);
+                }
+
+            }
+
+        }
+
+        //no path exists
+        if(curr.getCoordinate().distance(goal) != 0){
+            return null;
+        }
+
+        return getPath(parents, goal);
 	}
+
+	private double hueristic(MapNode start , MapNode curr, MapNode goal){
+        return start.getCoordinate().distance(curr.getCoordinate()) + curr.getCoordinate().distance(goal.getCoordinate());
+    }
 
     private List<GeographicPoint> getPath(Map<GeographicPoint, GeographicPoint> parents, GeographicPoint curr){
         //System.out.println("GETTING PATH");
@@ -340,8 +422,8 @@ public class MapGraph {
 		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5");
 		List<GeographicPoint> testroute = simpleTestMap.dijkstra(testStart,testEnd);
         System.out.println("Dijkstra: " + testroute.size());
-		//List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
-        //System.out.println("AStar: " + testroute2.size());
+		List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
+        System.out.println("AStar: " + testroute2.size());
 
 
 		
@@ -354,8 +436,8 @@ public class MapGraph {
 		System.out.println("Test 2 using utc: Dijkstra should be 13 and AStar should be 5");
 		testroute = testMap.dijkstra(testStart,testEnd);
         System.out.println("Dijkstra: " + testroute.size());
-		//testroute2 = testMap.aStarSearch(testStart,testEnd);
-        //System.out.println("AStar: " + testroute2.size());
+		testroute2 = testMap.aStarSearch(testStart,testEnd);
+        System.out.println("AStar: " + testroute2.size());
 		
 		
 		// A slightly more complex test using real data
@@ -364,8 +446,8 @@ public class MapGraph {
 		System.out.println("Test 3 using utc: Dijkstra should be 37 and AStar should be 10");
 		testroute = testMap.dijkstra(testStart,testEnd);
         System.out.println("Dijkstra: " + testroute.size());
-		//testroute2 = testMap.aStarSearch(testStart,testEnd);
-        //System.out.println("AStar: " + testroute2.size());
+		testroute2 = testMap.aStarSearch(testStart,testEnd);
+        System.out.println("AStar: " + testroute2.size());
 
 		
 		
